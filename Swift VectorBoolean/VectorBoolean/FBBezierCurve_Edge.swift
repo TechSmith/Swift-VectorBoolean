@@ -9,8 +9,6 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
-
 // 18
 //static void FBFindEdge1TangentCurves(FBBezierCurve *edge, FBBezierIntersection *intersection, FBBezierCurve** leftCurve, FBBezierCurve **rightCurve)
 private func FBFindEdge1TangentCurves(_ edge: FBBezierCurve, intersection: FBBezierIntersection) -> (leftCurve: FBBezierCurve, rightCurve: FBBezierCurve) {

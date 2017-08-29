@@ -9,8 +9,6 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
-
 /// FBEdgeCrossing is used by the boolean operations code to hold data about
 /// where two edges actually cross (as opposed to just intersect).
 ///
