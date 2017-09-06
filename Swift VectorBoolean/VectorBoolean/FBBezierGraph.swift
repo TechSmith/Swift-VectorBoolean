@@ -19,12 +19,10 @@
 //  multiple contours intersecting other contours.
 //
 
-// FBBezierGraph is more or less an exploded version of a UIBezierPath, and
+// FBBezierGraph is more or less an exploded version of a NSBezierPath, and
 //  the two can be converted between easily. FBBezierGraph allows boolean
 //  operations to be performed by allowing the curves to be annotated with
 //  extra information such as where intersections happen.
-
-import UIKit
 
 class FBBezierGraph {
 
@@ -42,20 +40,20 @@ class FBBezierGraph {
     _bounds = CGRect.null
   }
 
-  init(path: UIBezierPath) {
+  init(path: NSBezierPath) {
     _contours = []
     _bounds = CGRect.null
     _ = initWithBezierPath(path)
   }
 
-  class func bezierGraphWithBezierPath(_ path: UIBezierPath!) -> AnyObject {
+  class func bezierGraphWithBezierPath(_ path: NSBezierPath!) -> AnyObject {
     return FBBezierGraph().initWithBezierPath(path)
   }
 
   //- (id) initWithBezierPath:(NSBezierPath *)path
-  func initWithBezierPath(_ path: UIBezierPath!) -> FBBezierGraph {
+  func initWithBezierPath(_ path: NSBezierPath!) -> FBBezierGraph {
     // A bezier graph is made up of contours, which are closed paths of curves. Anytime we
-    //  see a move to in the UIBezierPath, that's a new contour.
+    //  see a move to in the NSBezierPath, that's a new contour.
 
     var lastPoint : CGPoint = CGPoint.zero
     var wasClosed = false
@@ -596,14 +594,14 @@ class FBBezierGraph {
 
   // 544
   //- (NSBezierPath *) bezierPath
-  var bezierPath : UIBezierPath {
+  var bezierPath : NSBezierPath {
     // Convert this graph into a bezier path. This is straightforward, each contour
     //  starting with a move to and each subsequent edge being translated by doing
     //  a curve to.
     // Be sure to mark the winding rule as even-odd, or interior contours (holes)
     //  won't get filled/left alone properly.
-    let path = UIBezierPath()
-    path.usesEvenOddFillRule = true
+    let path = NSBezierPath()
+    path.windingRule = .evenOddWindingRule
 
     for contour in _contours {
       var firstPoint = true
@@ -614,9 +612,9 @@ class FBBezierGraph {
         }
 
         if edge.isStraightLine {
-          path.addLine(to: edge.endPoint2)
+          path.line(to: edge.endPoint2)
         } else {
-          path.addCurve(to: edge.endPoint2, controlPoint1: edge.controlPoint1, controlPoint2: edge.controlPoint2)
+          path.curve(to: edge.endPoint2, controlPoint1: edge.controlPoint1, controlPoint2: edge.controlPoint2)
         }
       }
       if !path.isEmpty {
@@ -962,14 +960,14 @@ class FBBezierGraph {
 
   // 809
   //- (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)testContour
-  func debugPathForContainmentOfContour(_ testContour: FBBezierContour) -> UIBezierPath {
+  func debugPathForContainmentOfContour(_ testContour: FBBezierContour) -> NSBezierPath {
     return debugPathForContainmentOfContour(testContour, transform: CGAffineTransform.identity)
   }
 
   // 814
   //- (NSBezierPath *) debugPathForContainmentOfContour:(FBBezierContour *)testContour transform:(NSAffineTransform *)transform
-  func debugPathForContainmentOfContour(_ testContour: FBBezierContour, transform: CGAffineTransform) -> UIBezierPath {
-    let path = UIBezierPath()
+  func debugPathForContainmentOfContour(_ testContour: FBBezierContour, transform: CGAffineTransform) -> NSBezierPath {
+    let path = NSBezierPath()
 
     var intersectCount = 0
     for contour in self.contours {
@@ -1039,7 +1037,8 @@ class FBBezierGraph {
     let testCurve = FBBezierCurve(startPoint: testPoint, endPoint: lineEndPoint)
 
     let curvePath = testCurve.bezierPath
-    curvePath.apply(transform)
+    let newTransform = AffineTransform.init(m11: transform.a, m12: transform.b, m21: transform.c, m22: transform.d, tX: transform.tx, tY: transform.ty)
+    curvePath.transform(using: newTransform)
     path.append(curvePath)
 
     // if this countour is flagged as "inside", the debug path is shown dashed, otherwise solid
@@ -1055,20 +1054,20 @@ class FBBezierGraph {
 
   // 882
   //- (NSBezierPath *) debugPathForJointsOfContour:(FBBezierContour *)testContour
-  func debugPathForJointsOfContour(_ testContour: FBBezierContour) -> UIBezierPath {
-    let path = UIBezierPath()
+  func debugPathForJointsOfContour(_ testContour: FBBezierContour) -> NSBezierPath {
+    let path = NSBezierPath()
 
     for edge in testContour.edges {
       if !edge.isStraightLine {
         path.move(to: edge.endPoint1)
-        path.addLine(to: edge.controlPoint1)
-        path.append(UIBezierPath.smallCircleAtPoint(edge.controlPoint1))
+        path.line(to: edge.controlPoint1)
+        path.append(NSBezierPath.smallCircleAtPoint(edge.controlPoint1))
 
         path.move(to: edge.endPoint2)
-        path.addLine(to: edge.controlPoint2)
-        path.append(UIBezierPath.smallCircleAtPoint(edge.controlPoint2))
+        path.line(to: edge.controlPoint2)
+        path.append(NSBezierPath.smallCircleAtPoint(edge.controlPoint2))
       }
-      path.append(UIBezierPath.smallRectAtPoint(edge.endPoint2))
+      path.append(NSBezierPath.smallRectAtPoint(edge.endPoint2))
     }
     
     return path

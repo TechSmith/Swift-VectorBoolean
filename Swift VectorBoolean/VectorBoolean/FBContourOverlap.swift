@@ -9,8 +9,6 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
-
 class FBContourOverlap {
 
   fileprivate var runs : [FBEdgeOverlapRun] = []

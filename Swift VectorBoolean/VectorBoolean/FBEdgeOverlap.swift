@@ -9,8 +9,6 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
-
 let FBOverlapThreshold = isRunningOn64BitDevice ? 1e-2 : 1e-1
 
 class FBEdgeOverlap {

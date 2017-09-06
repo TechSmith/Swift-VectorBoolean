@@ -6,20 +6,22 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
+import Foundation
+import AppKit
+import CoreGraphics
 
 class LRTBezierPathWrapper {
 
   var elements: [PathElement]
-  fileprivate var _bezierPath : UIBezierPath
+  fileprivate var _bezierPath : NSBezierPath
 
-  var bezierPath : UIBezierPath {
+  var bezierPath : NSBezierPath {
     get {
       return _bezierPath
     }
   }
 
-  init(_ bezierPath:UIBezierPath) {
+  init(_ bezierPath:NSBezierPath) {
     elements = []
     _bezierPath = bezierPath
     createElementsFromCGPath()

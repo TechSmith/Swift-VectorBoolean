@@ -13,9 +13,6 @@
 // It represents one segment of a bezier path, and is where
 // the intersection calculation happens
 
-import UIKit
-
-
 // MARK ---- Normalized Line ----
 
 struct FBNormalizedLine {
@@ -2068,7 +2065,7 @@ class FBBezierCurve : CustomDebugStringConvertible, CustomStringConvertible, Equ
   }
 
   // 1336
-  class func bezierCurvesFromBezierPath(_ path: UIBezierPath!) -> [FBBezierCurve] {
+  class func bezierCurvesFromBezierPath(_ path: NSBezierPath!) -> [FBBezierCurve] {
     // Helper method to easily convert a bezier path into an array of FBBezierCurves.
     // Very straight-forward, only lines are a special case.
 
@@ -2417,11 +2414,11 @@ class FBBezierCurve : CustomDebugStringConvertible, CustomStringConvertible, Equ
 
   // 1628
   //- (NSBezierPath *) bezierPath
-  var bezierPath : UIBezierPath
+  var bezierPath : NSBezierPath
   {
-    let path = UIBezierPath()
+    let path = NSBezierPath()
     path.move(to: endPoint1)
-    path.addCurve(to: endPoint2, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+    path.curve(to: endPoint2, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
     return path
   }
 

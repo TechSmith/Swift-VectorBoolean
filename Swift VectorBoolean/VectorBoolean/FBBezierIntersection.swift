@@ -9,8 +9,6 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
-
 let FBPointCloseThreshold = isRunningOn64BitDevice ? 1e-7 : 1e-3
 let FBParameterCloseThreshold = isRunningOn64BitDevice ? 1e-4 : 1e-2
 

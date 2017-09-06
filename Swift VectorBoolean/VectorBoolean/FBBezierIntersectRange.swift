@@ -9,8 +9,6 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
-
 class FBBezierIntersectRange {
   var _curve1: FBBezierCurve
   var _parameterRange1: FBRange

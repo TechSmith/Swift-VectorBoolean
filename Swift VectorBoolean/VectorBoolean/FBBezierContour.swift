@@ -9,8 +9,6 @@
 //  Copyright (c) 2015 Leslie Titze. All rights reserved.
 //
 
-import UIKit
-
 enum FBContourInside {
   case filled
   case hole
@@ -34,7 +32,7 @@ class FBBezierContour {
   fileprivate var _bounds : CGRect
   fileprivate var _boundingRect : CGRect
   fileprivate var _inside : FBContourInside
-  fileprivate var	_bezPathCache : UIBezierPath?
+  fileprivate var	_bezPathCache : NSBezierPath?
 
 
   //@property FBContourInside inside;
@@ -492,9 +490,9 @@ class FBBezierContour {
 
   // 376
   //- (NSBezierPath*) bezierPath		// GPC: added
-  var bezierPath : UIBezierPath {
+  var bezierPath : NSBezierPath {
     if _bezPathCache == nil {
-      let path = UIBezierPath()
+      let path = NSBezierPath()
       var firstPoint = true
 
       for edge in self.edges {
@@ -504,16 +502,16 @@ class FBBezierContour {
         }
 
         if edge.isStraightLine {
-          path.addLine(to: edge.endPoint2)
+          path.line(to: edge.endPoint2)
         } else {
-          path.addCurve(to: edge.endPoint2, controlPoint1: edge.controlPoint1, controlPoint2: edge.controlPoint2)
+          path.curve(to: edge.endPoint2, controlPoint1: edge.controlPoint1, controlPoint2: edge.controlPoint2)
         }
       }
 
       if !path.isEmpty {
         path.close()
       }
-      path.usesEvenOddFillRule = true
+      path.windingRule = .evenOddWindingRule
 
       _bezPathCache = path
     }
@@ -779,9 +777,9 @@ class FBBezierContour {
   /// This allows the internal state of a contour to be
   /// rapidly visualized so that bugs with boolean ops
   /// are easier to spot at a glance.
-  func debugPathForIntersectionType(_ itersectionType: Int) -> UIBezierPath {
+  func debugPathForIntersectionType(_ itersectionType: Int) -> NSBezierPath {
 
-    let path : UIBezierPath = UIBezierPath()
+    let path : NSBezierPath = NSBezierPath()
 
     for edge in _edges {
 
@@ -798,9 +796,9 @@ class FBBezierContour {
           }
         }
         if crossing.isEntry {
-          path.append(UIBezierPath.circleAtPoint(crossing.location))
+          path.append(NSBezierPath.circleAtPoint(crossing.location))
         } else {
-          path.append(UIBezierPath.rectAtPoint(crossing.location))
+          path.append(NSBezierPath.rectAtPoint(crossing.location))
         }
 
         return (false, false)
@@ -810,7 +808,7 @@ class FBBezierContour {
     // Add the start point and direction for marking
     if let startEdge = self.startEdge {
       let startEdgeTangent = FBNormalizePoint(FBSubtractPoint(startEdge.controlPoint1, point2: startEdge.endPoint1));
-      path.append(UIBezierPath.triangleAtPoint(startEdge.endPoint1, direction: startEdgeTangent))
+      path.append(NSBezierPath.triangleAtPoint(startEdge.endPoint1, direction: startEdgeTangent))
     }
 
     // Add the contour's entire path to make it easy
