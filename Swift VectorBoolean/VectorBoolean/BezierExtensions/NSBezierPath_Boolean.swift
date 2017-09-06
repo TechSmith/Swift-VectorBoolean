@@ -16,14 +16,10 @@ extension NSBezierPath {
   func fb_union(_ path: NSBezierPath) -> NSBezierPath? {
     let thisGraph = FBBezierGraph(path: self)
     let otherGraph = FBBezierGraph(path: path)
-   if let resultGraph = thisGraph.unionWithBezierGraph(otherGraph) {
-    let result = resultGraph.bezierPath
-    result.fb_copyAttributesFrom(self)
+    let resultGraph = thisGraph.unionWithBezierGraph(otherGraph)
+    let result = resultGraph?.bezierPath
+    result?.fb_copyAttributesFrom(self)
     return result
-   }
-   else {
-   return nil
-   }
   }
 
   func fb_intersect(_ path: NSBezierPath) -> NSBezierPath {
